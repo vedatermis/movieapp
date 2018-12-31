@@ -1,13 +1,26 @@
-import React, { Component } from 'react'
-import { Button, Form, Image } from 'semantic-ui-react'
-import InlineError from "./InlineError"
+import React, { Component } from 'react';
+import { Button, Form, Image, Message } from 'semantic-ui-react';
+import InlineError from "./InlineError";
+import { Redirect } from "react-router-dom";
 
 export class NewMovieForm extends Component {
     state = {
-        title: "",
-        cover: "",
+        _id: this.props.movie ? this.props.movie._id : "",
+        title: this.props.movie ? this.props.movie.title : "",
+        cover: this.props.movie ? this.props.movie.cover : "",
         errors: {}
     };
+
+    componentWillReceiveProps(nextProps) {
+        const { movie } = nextProps.newMovie;
+        if (movie.title && movie.title !== this.state.title)
+        {
+            this.setState({
+                title: movie.title,
+                cover: movie.cover
+            });    
+        }
+    }
 
     handleChange = (e) => {
         this.setState({
@@ -21,8 +34,14 @@ onSubmit = () => {
         errors
     });
 
+    const _id = this.state._id || this.props.newMovie.movie._id;
+
     if(Object.keys(errors).length === 0) {
-        this.props.onNewMovieSubmit(this.state);
+        if (!_id)
+            this.props.onNewMovieSubmit(this.state);
+        else
+            this.props.onUpdateMovieSubmit({ ...this.state, _id });
+
     }
 };
 
@@ -38,12 +57,8 @@ validate = () => {
 
     render() {
         const errors  = this.state.errors;
-
-        return (
-            <div>
-                <h2>Add New Movie</h2>
-
-                <Form onSubmit = { this.onSubmit } loading = { this.props.newMovie.fetching }>
+        const form = (
+            <Form onSubmit = { this.onSubmit } loading = { this.props.newMovie.fetching || this.props.newMovie.movie.fetching }>
                     <Form.Field error = {!!errors.title}>
                         <label>Title</label>
                         { errors.title && <InlineError message = { errors.title } />}
@@ -67,7 +82,24 @@ validate = () => {
                     </Form.Field>
                     <Image src={this.state.cover} size='small' />
                     <Button primary type='submit'>Submit</Button>
+                    {
+                        this.props.newMovie.error.response 
+                        && 
+                        (
+                            <Message negative>
+                            <Message.Header>We're sorry</Message.Header>
+                            <p>A problem occured while recording.</p>
+                          </Message>
+                        )
+                    }
                 </Form>
+        )
+
+        return (
+            <div>
+                {
+                    this.props.newMovie.done ? <Redirect to = "/movies"/> : form
+                }
             </div>
         )
     }

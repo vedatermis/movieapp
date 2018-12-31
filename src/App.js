@@ -21,6 +21,7 @@ class App extends Component {
           */}
         <Route exact path="/movies" component={ MoviesPage } />
         <Route exact path="/movies/addnew" component = { NewMoviePage }/>
+        <Route exact path="/movie/:_id" component = { NewMoviePage }/>
 
       </Container>
       <Footer />
