@@ -73,7 +73,6 @@ export default (state = initialState, action) => {
             }
         };
         
-
         // UPDATE MOVIE
 
         case UPDATE_MOVIE_PENDING:

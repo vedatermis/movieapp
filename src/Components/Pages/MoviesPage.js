@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
 import MovieList from "../MovieList";
-import { fetchMovies } from "../../Actions/movies";
+import { fetchMovies, deleteMovie } from "../../Actions/movies";
 
 class MoviesPage extends Component {
   
@@ -13,14 +13,18 @@ class MoviesPage extends Component {
     return (
       <div>
         Movies
-        <MovieList movies = { this.props.movies }/>
+        <MovieList 
+        movies = { this.props.movies }
+        deleteMovie = { this.props.deleteMovie }
+        />
       </div>
     )
   }
 }
 
 const mapDispatchToProps = {
-  fetchMovies
+  fetchMovies,
+  deleteMovie
 };
 
 

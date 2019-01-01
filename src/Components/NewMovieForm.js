@@ -8,7 +8,8 @@ export class NewMovieForm extends Component {
         _id: this.props.movie ? this.props.movie._id : "",
         title: this.props.movie ? this.props.movie.title : "",
         cover: this.props.movie ? this.props.movie.cover : "",
-        errors: {}
+        errors: {},
+        redirect: false
     };
 
     componentWillReceiveProps(nextProps) {
@@ -31,7 +32,8 @@ export class NewMovieForm extends Component {
 onSubmit = () => {
     const errors = this.validate();
     this.setState({
-        errors
+        errors,
+        redirect: true
     });
 
     const _id = this.state._id || this.props.newMovie.movie._id;
@@ -98,7 +100,8 @@ validate = () => {
         return (
             <div>
                 {
-                    this.props.newMovie.done ? <Redirect to = "/movies"/> : form
+                    this.props.newMovie.done && this.state.redirect 
+                    ? <Redirect to = "/movies"/> : form
                 }
             </div>
         )
